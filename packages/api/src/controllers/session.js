@@ -41,8 +41,16 @@ const fieldsMap = {
 };
 
 app.get("/", authMiddleware({}), async (req, res, next) => {
-  let { limit, cursor, all, order, filters, userId, parentId, count } =
-    req.query;
+  let {
+    limit,
+    cursor,
+    all,
+    order,
+    filters,
+    userId,
+    parentId,
+    count,
+  } = req.query;
   const { forceUrl } = req.query;
   if (isNaN(parseInt(limit))) {
     limit = undefined;

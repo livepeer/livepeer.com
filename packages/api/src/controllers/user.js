@@ -91,8 +91,14 @@ app.get("/:id", authMiddleware({ allowUnverified: true }), async (req, res) => {
 });
 
 app.post("/", validatePost("user"), async (req, res) => {
-  const { email, password, firstName, lastName, organization, phone } =
-    req.body;
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    organization,
+    phone,
+  } = req.body;
   const { selectedPlan } = req.query;
   const emailValid = validator.validate(email);
   if (!emailValid) {
@@ -110,6 +116,17 @@ app.post("/", validatePost("user"), async (req, res) => {
     validUser = false;
   }
 
+  let admin = false;
+  const [[oneUser]] = await db.user.find({}, { limit: 1 });
+  if (!oneUser) {
+    logger.warn("!!!!!!!!!!!!!!!!!!!");
+    logger.warn(
+      `first user detected, promoting new admin userId=${id} email=${email}`
+    );
+    logger.warn("!!!!!!!!!!!!!!!!!!!");
+    admin = true;
+  }
+
   await Promise.all([
     req.store.create({
       kind: "user",
@@ -117,7 +134,7 @@ app.post("/", validatePost("user"), async (req, res) => {
       password: hashedPassword,
       email: email,
       salt: salt,
-      admin: false,
+      admin: admin,
       emailValidToken: emailValidToken,
       emailValid: validUser,
       firstName,

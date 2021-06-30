@@ -10,7 +10,10 @@
     "start": "next start",
     "postbuild": "next-sitemap",
     "type-check": "tsc --pretty --noEmit",
-    "docs-positions": "node ./generate-docs-positions.js"
+    "docs-positions": "node ./generate-docs-positions.js",
+    "docker:build": "yarn run static-export && docker build -t livepeerci/www:${DOCKER_TAG:-master} .",
+    "docker:push": "docker push livepeerci/www:${DOCKER_TAG:-master}",
+    "static-export": "export LP_STATIC_BUILD=true; next build; next export || true"
   },
   "license": "MIT",
   "dependencies": {
@@ -18,7 +21,6 @@
     "@emotion/core": "^10.0.17",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^10.0.23",
-    "@livepeer.com/api": "1.0.0-alpha.7",
     "@mdx-js/loader": "^1.6.16",
     "@mdx-js/mdx": "^1.6.16",
     "@mdx-js/react": "^1.6.16",
@@ -58,6 +60,7 @@
     "next-sitemap": "^1.2.4",
     "next-transpile-modules": "^4.1.0",
     "pascal-case": "^3.1.1",
+    "pbkdf2": "^3.1.2",
     "prism-react-renderer": "^1.1.0",
     "raw-loader": "^4.0.1",
     "react": "^16.12.0",
@@ -110,6 +113,7 @@
     "prettier": "^2.0.5",
     "react-test-renderer": "^16.12.0",
     "sass": "^1.34.1",
+    "swagger-markdown": "^1.4.3",
     "typescript": "^4.1.3"
   },
   "husky": {
